@@ -10,19 +10,19 @@ public class Activity
 
     public virtual void Start()
     {
-        Console.WriteLine("Starting {0} activity...", Name);
+        Console.WriteLine("Starting {0} activity...", BreathingActivity);
         Console.WriteLine("Enter the duration in seconds: ");
         Duration = int.Parse(Console.ReadLine());
     }
 
     public virtual void Run()
     {
-        Console.WriteLine("Running {0} activity...", Name);
+        Console.WriteLine("Running {0} activity...", Reflection Activity);
     }
 
     public virtual void End()
     {
-        Console.WriteLine("Ending {0} activity...", Name);
+        Console.WriteLine("Ending {0} activity...", EnumerationActivity);
     }
 }
 
