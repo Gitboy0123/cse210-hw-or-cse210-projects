@@ -10,19 +10,19 @@ public class Activity
 
     public virtual void Start()
     {
-        Console.WriteLine("Starting {0} activity...", BreathingActivity);
+        Console.WriteLine("Starting {0} activity...", Name);
         Console.WriteLine("Enter the duration in seconds: ");
         Duration = int.Parse(Console.ReadLine());
     }
 
     public virtual void Run()
     {
-        Console.WriteLine("Running {0} activity...", Reflection Activity);
+        Console.WriteLine("Running {0} activity...", Name);
     }
 
     public virtual void End()
     {
-        Console.WriteLine("Ending {0} activity...", EnumerationActivity);
+        Console.WriteLine("Ending {0} activity...", Name);
     }
 }
 
@@ -30,6 +30,12 @@ public class BreathingActivity : Activity
 {
     public override void Run()
     {
+        Console.WriteLine(Description);
+        base.Run();
+
+        Console.WriteLine("Start breathing...");
+        Thread.Sleep(3000);
+
         for (int i = 0; i < Duration; i++)
         {
             Console.WriteLine("Breathe in...");
@@ -52,9 +58,12 @@ public class ReflectionActivity : Activity
 
     public override void Run()
     {
+        Console.WriteLine(Description);
+        base.Run();
         string prompt = prompts[new Random().Next(prompts.Length)];
         Console.WriteLine($"Prompt: {prompt}");
 
+       
         for (int i = 0; i < Duration; i++)
         {
             Console.WriteLine("Reflect on the prompt...");
@@ -78,11 +87,14 @@ public class EnumerationActivity : Activity
 
     public override void Run()
     {
+        Console.WriteLine(Description);
+        base.Run();
         string prompt = prompts[new Random().Next(prompts.Length)];
         Console.WriteLine($"Prompt: {prompt}");
 
+       
         Console.WriteLine("Start listing items...");
-        Thread.Sleep(1000);
+        Thread.Sleep(3000);
 
         List<string> items = new List<string>();
         for (int i = 0; i < Duration; i++)
@@ -116,9 +128,21 @@ public class Menu
 {
     private Activity[] activities = new Activity[]
     {
-        new BreathingActivity(),
-        new ReflectionActivity(),
-        new EnumerationActivity(),
+        new BreathingActivity
+        {
+            Name = "Breathing Activity",
+            Description = "This activity will help you relax by walking you through breathing in and out slowly. Clear your mind and focus on your breathing."
+        },
+        new ReflectionActivity
+        {
+            Name = "Reflection Activity",
+            Description = "This activity will help you reflect on times in your life when you have shown strength and resilience. This will help you recognize the power you have and how you can use it in other aspects of your life."
+        },
+        new EnumerationActivity
+        {
+            Name = "Enumeration Activity",
+            Description = "This activity will help you reflect on the good things in your life by having you list as many things as you can in a certain area."
+        },
     };
 
     public void ShowMenu()
