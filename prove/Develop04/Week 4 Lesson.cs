@@ -13,6 +13,8 @@ public class Activity
         Console.WriteLine("Starting {0} activity...", Name);
         Console.WriteLine("Enter the duration in seconds: ");
         Duration = int.Parse(Console.ReadLine());
+        Console.WriteLine("Prepare to begin...");
+        Thread.Sleep(3000);
     }
 
     public virtual void Run()
@@ -23,6 +25,18 @@ public class Activity
     public virtual void End()
     {
         Console.WriteLine("Ending {0} activity...", Name);
+        Console.WriteLine("Good job! You completed the {0} activity in {1} seconds.", Name, Duration);
+        Thread.Sleep(3000);
+    }
+
+    protected void DisplaySpinner(int seconds)
+    {
+        for (int i = 0; i < seconds; i++)
+        {
+            Console.Write(".");
+            Thread.Sleep(1000);
+        }
+        Console.WriteLine();
     }
 }
 
@@ -39,9 +53,9 @@ public class BreathingActivity : Activity
         for (int i = 0; i < Duration; i++)
         {
             Console.WriteLine("Breathe in...");
-            Thread.Sleep(1000);
+            DisplaySpinner(2);
             Console.WriteLine("Breathe out...");
-            Thread.Sleep(1000);
+            DisplaySpinner(2);
         }
     }
 }
@@ -63,13 +77,12 @@ public class ReflectionActivity : Activity
         string prompt = prompts[new Random().Next(prompts.Length)];
         Console.WriteLine($"Prompt: {prompt}");
 
-       
         for (int i = 0; i < Duration; i++)
         {
             Console.WriteLine("Reflect on the prompt...");
-            Thread.Sleep(1000);
+            DisplaySpinner(2);
             Console.WriteLine("What did you learn?");
-            Thread.Sleep(1000);
+            DisplaySpinner(2);
         }
     }
 }
@@ -92,7 +105,6 @@ public class EnumerationActivity : Activity
         string prompt = prompts[new Random().Next(prompts.Length)];
         Console.WriteLine($"Prompt: {prompt}");
 
-       
         Console.WriteLine("Start listing items...");
         Thread.Sleep(3000);
 
