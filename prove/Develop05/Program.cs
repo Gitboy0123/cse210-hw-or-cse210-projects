@@ -1,108 +1,89 @@
 using System;
-using System.Collections.Generic;
+using System.Threading;
 
-public class Goal
+// Base class for activities
+class Activity
 {
     public string Name { get; set; }
-    public int Value { get; set; }
-    public bool IsComplete { get; set; }
+    public string Description { get; set; }
+    public int Duration { get; set; }
 
-    public virtual void RecordEvent()
-    {
-        if (!IsComplete)
-        {
-           
-            IsComplete = true;
-        }
-    }
-}
-
-public class SimpleGoal : Goal
-{
-    public SimpleGoal(string name, int value)
+    public Activity(string name, string description)
     {
         Name = name;
-        Value = value;
+        Description = description;
+        Duration = 0;
+    }
+
+    public void SetDuration()
+    {
+        Console.Write($"Set the duration (in seconds) for {Name}: ");
+        Duration = int.Parse(Console.ReadLine());
+    }
+
+    public void StartActivity()
+    {
+        Console.WriteLine($"Starting {Name} - {Description}");
+        Thread.Sleep(2000); // Pause for 2 seconds
+
+        // Implement your specific activity logic in derived classes
+    }
+
+    public void EndActivity()
+    {
+        Console.WriteLine($"Good job! You've completed {Name} for {Duration} seconds.");
+        Thread.Sleep(2000); // Pause for 2 seconds
     }
 }
 
-public class EternalGoal : Goal
+// Breathing Activity
+class BreathingActivity : Activity
 {
-    public EternalGoal(string name, int value)
+    public BreathingActivity() : base("Breathing", "Relax by focusing on your breath")
     {
-        Name = name;
-        Value = value;
-        IsComplete = false;
+    }
+
+    public new void StartActivity()
+    {
+        base.StartActivity();
+        for (int i = 0; i < Duration; i++)
+        {
+            Console.WriteLine("Breathe in...");
+            Thread.Sleep(1000); // Pause for 1 second
+            Console.WriteLine("Breathe out...");
+            Thread.Sleep(1000); // Pause for 1 second
+        }
+        EndActivity();
     }
 }
 
-public class ChecklistGoal : Goal
+// Reflection Activity
+class ReflectionActivity : Activity
 {
-    public int TargetCompletions { get; set; }
-    public int CurrentCompletions { get; set; }
-
-    public ChecklistGoal(string name, int value, int targetCompletions)
+    public ReflectionActivity() : base("Reflection", "Reflect on past experiences")
     {
-        Name = name;
-        Value = value;
-        TargetCompletions = targetCompletions;
-        CurrentCompletions = 0;
     }
 
-    public override void RecordEvent()
+    public new void StartActivity()
     {
-        if (!IsComplete)
-        {
-            CurrentCompletions++;
-            if (CurrentCompletions == TargetCompletions)
-            {
-                IsComplete = true;
-                Value += 500;
-            }
-            else
-            {
-                Value += 50;
-            }
-        }
+        base.StartActivity();
+        // Implement your reflection logic here
+        EndActivity();
     }
 }
 
-public class GoalManager
+// Enumeration Activity
+class EnumerationActivity : Activity
 {
-    private List<Goal> goals = new List<Goal>();
-    private int userScore = 0;
-
-    public void AddGoal(Goal goal)
+    public EnumerationActivity() : base("Enumeration", "List things in a specific category")
     {
-        goals.Add(goal);
     }
 
-    public void RecordGoalCompletion(int goalIndex)
+    public new void StartActivity()
     {
-        if (goalIndex >= 0 && goalIndex < goals.Count)
-        {
-            Goal goal = goals[goalIndex];
-            goal.RecordEvent();
-            userScore += goal.Value;
-        }
-    }
-
-    public void DisplayGoals()
-    {
-        for (int i = 0; i < goals.Count; i++)
-        {
-            Goal goal = goals[i];
-            Console.WriteLine($"{i + 1}. [{(goal.IsComplete ? "X" : " ")}] {goal.Name} ({goal.Value} points)");
-            if (goal is ChecklistGoal checklistGoal)
-            {
-                Console.WriteLine($"   Completed {checklistGoal.CurrentCompletions}/{checklistGoal.TargetCompletions} times");
-            }
-        }
-    }
-
-    public int GetUserScore()
-    {
-        return userScore;
+        base.StartActivity();
+        // Implement your enumeration logic here
+        EndActivity();
     }
 }
 
@@ -110,21 +91,34 @@ class Program
 {
     static void Main(string[] args)
     {
-        GoalManager manager = new GoalManager();
+        // Create activity objects
+        BreathingActivity breathingActivity = new BreathingActivity();
+        ReflectionActivity reflectionActivity = new ReflectionActivity();
+        EnumerationActivity enumerationActivity = new EnumerationActivity();
 
-       
-        manager.AddGoal(new SimpleGoal("Run a marathon", 1000));
-        manager.AddGoal(new EternalGoal("Read scriptures", 100));
-        manager.AddGoal(new ChecklistGoal("Attend the temple", 50, 10));
+        // Add activities to a menu system
+        Activity[] activities = { breathingActivity, reflectionActivity, enumerationActivity };
 
-       
-        manager.RecordGoalCompletion(0);
-        manager.RecordGoalCompletion(1);
-        manager.RecordGoalCompletion(2);
-        manager.RecordGoalCompletion(2);
+        Console.WriteLine("Welcome to the Activity Program");
+        while (true)
+        {
+            Console.WriteLine("Choose an activity:");
+            for (int i = 0; i < activities.Length; i++)
+            {
+                Console.WriteLine($"{i + 1}. {activities[i].Name}");
+            }
 
-       
-        manager.DisplayGoals();
-        Console.WriteLine($"User's Score: {manager.GetUserScore()}");
+            int choice = int.Parse(Console.ReadLine()) - 1;
+
+            if (choice >= 0 && choice < activities.Length)
+            {
+                activities[choice].SetDuration();
+                activities[choice].StartActivity();
+            }
+            else
+            {
+                Console.WriteLine("Invalid choice. Try again.");
+            }
+        }
     }
 }
